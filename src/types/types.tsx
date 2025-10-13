@@ -1,11 +1,7 @@
-export type Post = {
-  id?: number;
-  title: string;
-  content: string;
-  createdAt?: Date;
-};
-
 export type User = {
-  id: number;
+  id?: number;
   email: string;
+  password: string;
+  avatar?: string;
+  name: string;
 };

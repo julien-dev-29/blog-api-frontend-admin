@@ -1,15 +1,15 @@
 import { Outlet } from "react-router";
-import Navbar from "./components/navbar";
-import Footer from "./components/footer";
+import { ThemeProvider } from "./components/theme-provider";
+import Layout from "./layouts/layout";
 
-const App = () => {
+function App() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-between">
-      <Navbar />
-      <Outlet />
-      <Footer />
-    </div>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <Layout>
+        <Outlet />
+      </Layout>
+    </ThemeProvider>
   );
-};
+}
 
 export default App;
