@@ -71,10 +71,10 @@ export default function PostsCreate() {
 
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-6">Créer un Post</h1>
+      <h1 className="text-2xl font-bold mb-6">Create a Post</h1>
       <form className="space-y-5" onSubmit={handleSubmit}>
         <div className="space-y-1">
-          <Label htmlFor="title">Titre</Label>
+          <Label htmlFor="title">Title</Label>
           <Input
             id="title"
             required
@@ -92,11 +92,13 @@ export default function PostsCreate() {
           />
         </div>
         <div className="space-y-1">
-          <Label>Contenu</Label>
-          <TipTapEditor
-            initialContent={post.content}
-            onChange={(content) => setPost({ ...post, content })}
-          />
+          <Label>Content</Label>
+          <div className="shadow rounded">
+            <TipTapEditor
+              initialContent={post.content}
+              onChange={(content) => setPost({ ...post, content })}
+            />
+          </div>
         </div>
         <Button type="submit" disabled={isLoading}>
           {isLoading ? "Publication en cours..." : "Publier"}

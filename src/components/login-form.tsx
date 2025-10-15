@@ -14,8 +14,10 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
+import { Spinner } from "./ui/spinner";
+import MyAlert from "./my-components/my-alert";
 
 export function LoginForm({
   className,
@@ -50,8 +52,21 @@ export function LoginForm({
     }
   }
 
-  if (error) return <div>Error</div>;
-  if (isLoading) return <div>Loading...</div>;
+  if (error.length > 0) {
+    return (
+      <div className="flex-1 h-full flex items-center">
+        <MyAlert>{error}</MyAlert>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex-1 h-full flex items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>

@@ -5,3 +5,8 @@ export type User = {
   avatar?: string;
   name: string;
 };
+
+export type Category = {
+  id?: number;
+  name: string;
+};

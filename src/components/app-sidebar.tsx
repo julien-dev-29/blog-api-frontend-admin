@@ -10,11 +10,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Home, Newspaper } from "lucide-react";
+import { Home, Newspaper, TagIcon } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import { NavLink } from "react-router";
 import { isAuthenticated } from "@/lib/auth";
 import { NavUser } from "./nav-user";
+import { IconCategory2 } from "@tabler/icons-react";
 const items = [
   {
     title: "Home",
@@ -25,6 +26,16 @@ const items = [
     title: "Posts",
     url: "/posts",
     icon: Newspaper,
+  },
+  {
+    title: "Categories",
+    url: "/categories",
+    icon: IconCategory2,
+  },
+  {
+    title: "Tags",
+    url: "/tags",
+    icon: TagIcon,
   },
 ];
 
@@ -55,15 +66,15 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
         <ModeToggle />
-          {isAuthenticated() && (
-            <NavUser
-              user={{
-                name: "jurol",
-                avatar: "avatar",
-                email: "jurol@jurol.com",
-              }}
-            />
-          )}
+        {isAuthenticated() && (
+          <NavUser
+            user={{
+              name: "jurol",
+              avatar: "avatar",
+              email: "jurol@jurol.com",
+            }}
+          />
+        )}
       </SidebarFooter>
     </Sidebar>
   );
