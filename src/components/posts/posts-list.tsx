@@ -56,7 +56,7 @@ export default function PostsLists() {
         const data = await res.json();
         if (!res.ok) throw new Error(data.error);
         toast.success("Posts delete with success!");
-        await fetchPosts(page)
+        await fetchPosts(page);
       } catch (error) {
         setError(error as string);
       }
@@ -92,7 +92,9 @@ export default function PostsLists() {
               <TableCell>{post.id}</TableCell>
               <TableCell>{post.title}</TableCell>
               <TableCell className="flex gap-1">
-                <Button>Edit</Button>
+                <Button onClick={() => navigate("/posts/" + post.id)}>
+                  Edit
+                </Button>
                 <Button
                   variant="destructive"
                   onClick={() => handleDelete(post.id)}

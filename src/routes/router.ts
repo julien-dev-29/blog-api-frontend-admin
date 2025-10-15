@@ -10,6 +10,7 @@ import CategoriesCreate from "../components/categories/categories-create.tsx";
 import TagsList from "../components/tags/index.tsx";
 import TagsCreate from "../components/tags/tags-create.tsx";
 import CategoriesEdit from "@/components/categories/categories-edit.tsx";
+import PostsEdit from "@/components/posts/posts-edit.tsx";
 
 export const router = createBrowserRouter([
     {
@@ -26,7 +27,7 @@ export const router = createBrowserRouter([
                 children: [
                     { index: true, Component: PostsLists },
                     { path: "create", Component: PostsCreate },
-                    { path: ":id/edit", Component: PostsCreate },
+                    { path: ":id", Component: PostsEdit },
                 ],
             },
             {

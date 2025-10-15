@@ -1,12 +1,14 @@
-// components/posts/posts-create.tsx
-import { Button } from "../ui/button";
+import { getToken } from "@/lib/auth";
+import { useEffect, useState, type FormEvent } from "react";
+import { useNavigate, useParams } from "react-router";
+import { toast } from "sonner";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { TipTapEditor } from "../editor/tiptap-editor";
-import { useState, type FormEvent } from "react";
-import { getToken } from "@/lib/auth";
-import { toast } from "sonner";
-import { useNavigate } from "react-router"; // Pour la redirection après soumission
+import { Button } from "../ui/button";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { AlertCircleIcon } from "lucide-react";
+import { Spinner } from "../ui/spinner";
 
 type Post = {
   title: string;
@@ -14,16 +16,35 @@ type Post = {
   slug: string;
 };
 
-export default function PostsCreate() {
+export default function PostsEdit() {
+  const params = useParams();
   const [post, setPost] = useState<Post>({
     title: "",
     content: "",
     slug: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate(); // Pour rediriger après la création du post
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const navigate = useNavigate();
 
-  // Génère le slug automatiquement à partir du titre
+  async function fetchPost(postId: number) {
+    setIsLoading(true);
+    try {
+      const res = await fetch("http://localhost:3000/api/posts/" + postId);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setPost(data);
+      setIsLoading(false);
+    } catch (error) {
+      setError(error as string);
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchPost(Number(params.id));
+  }, [params.id]);
+
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
     const newSlug = newTitle
@@ -41,14 +62,17 @@ export default function PostsCreate() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/api/posts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`,
-        },
-        body: JSON.stringify(post),
-      });
+      const response = await fetch(
+        "http://localhost:3000/api/posts/" + params.id,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getToken()}`,
+          },
+          body: JSON.stringify(post),
+        }
+      );
 
       const data = await response.json();
 
@@ -68,6 +92,22 @@ export default function PostsCreate() {
       setIsLoading(false);
     }
   };
+
+  if (isLoading) return <Spinner />;
+
+  if (error.length > 0) return;
+  <Alert variant="destructive">
+    <AlertCircleIcon />
+    <AlertTitle>Unable to process your payment.</AlertTitle>
+    <AlertDescription>
+      <p>Please verify your billing information and try again.</p>
+      <ul className="list-inside list-disc text-sm">
+        <li>Check your card details</li>
+        <li>Ensure sufficient funds</li>
+        <li>Verify billing address</li>
+      </ul>
+    </AlertDescription>
+  </Alert>;
 
   return (
     <div className="container mx-auto py-8">
@@ -94,7 +134,10 @@ export default function PostsCreate() {
         <div className="space-y-1">
           <Label>Content</Label>
           <div className="shadow rounded">
-            <TipTapEditor />
+            <TipTapEditor
+              initialContent={post.content}
+              onChange={(content) => setPost({ ...post, content })}
+            />
           </div>
         </div>
         <Button type="submit" disabled={isLoading}>
