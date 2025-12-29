@@ -11,7 +11,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Home, Newspaper, TagIcon } from "lucide-react";
-import { ModeToggle } from "./mode-toggle";
 import { NavLink } from "react-router";
 import { isAuthenticated } from "@/lib/auth";
 import { NavUser } from "./nav-user";
@@ -65,7 +64,6 @@ export function AppSidebar() {
         </SidebarContent>
       </SidebarContent>
       <SidebarFooter>
-        <ModeToggle />
         {isAuthenticated() && (
           <NavUser
             user={{

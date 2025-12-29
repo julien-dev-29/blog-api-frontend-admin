@@ -3,71 +3,19 @@ import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { TipTapEditor } from "../editor/tiptap-editor";
-import { useState, type FormEvent } from "react";
-import { getToken } from "@/lib/auth";
-import { toast } from "sonner";
-import { useNavigate } from "react-router"; // Pour la redirection après soumission
-
-type Post = {
-  title: string;
-  content: string;
-  slug: string;
-};
+import { useCreatePost } from "@/hooks/useCreatePost";
 
 export default function PostsCreate() {
-  const [post, setPost] = useState<Post>({
-    title: "",
-    content: "",
-    slug: "",
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate(); // Pour rediriger après la création du post
-
-  // Génère le slug automatiquement à partir du titre
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTitle = e.target.value;
-    const newSlug = newTitle
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9-]/g, "-")
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "");
-    setPost({ ...post, title: newTitle, slug: newSlug });
-  };
-
-  // Soumission du formulaire
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const response = await fetch("http://localhost:3000/api/posts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`,
-        },
-        body: JSON.stringify(post),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Erreur lors de la création du post");
-      }
-
-      // Affichage d'un toast de succès
-      toast.success(data.message || "Post créé avec succès !");
-
-      navigate("/posts");
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Une erreur est survenue";
-      toast.error(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const {
+    post,
+    isLoading,
+    errors,
+    handleTitleChange,
+    generateSlug,
+    handleContentChange,
+    handleSubmit,
+    setPost,
+  } = useCreatePost();
 
   return (
     <div className="container mx-auto py-8">
@@ -81,24 +29,47 @@ export default function PostsCreate() {
             value={post.title}
             onChange={handleTitleChange}
           />
+          {errors?.formErrors.fieldErrors.title && (
+            <p className="text-red-500 text-sm">
+              {errors.formErrors.fieldErrors.title}
+            </p>
+          )}
         </div>
         <div className="space-y-1">
           <Label htmlFor="slug">Slug</Label>
-          <Input
-            id="slug"
-            required
-            value={post.slug}
-            onChange={(e) => setPost({ ...post, slug: e.target.value })}
-          />
+          <div className="flex items-center gap-2">
+            <Input
+              id="slug"
+              required
+              value={post.slug}
+              onChange={(e) => setPost({ ...post, slug: e.target.value })}
+            />
+            <Button type="button" onClick={generateSlug}>
+              Generate
+            </Button>
+          </div>
+          {errors?.formErrors.fieldErrors.slug && (
+            <p className="text-red-500 text-sm">
+              {errors.formErrors.fieldErrors.slug}
+            </p>
+          )}
         </div>
         <div className="space-y-1">
           <Label>Content</Label>
           <div className="shadow rounded">
-            <TipTapEditor />
+            <TipTapEditor
+              content={post.content}
+              onChange={handleContentChange}
+            />
           </div>
+          {errors?.formErrors.fieldErrors.content && (
+            <p className="text-red-500 text-sm">
+              {errors.formErrors.fieldErrors.content}
+            </p>
+          )}
         </div>
         <Button type="submit" disabled={isLoading}>
-          {isLoading ? "Publication en cours..." : "Publier"}
+          {isLoading ? "Publishing..." : "Publish"}
         </Button>
       </form>
     </div>

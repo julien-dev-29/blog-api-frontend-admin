@@ -80,14 +80,14 @@ export default function PostsLists() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {posts.length === 0 && (
+          {posts?.length === 0 && (
             <TableRow>
               <TableCell colSpan={3} className="text-center">
                 No posts available.
               </TableCell>
             </TableRow>
           )}
-          {posts.map((post) => (
+          {posts?.map((post) => (
             <TableRow key={post.id}>
               <TableCell>{post.id}</TableCell>
               <TableCell>{post.title}</TableCell>

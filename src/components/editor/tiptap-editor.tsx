@@ -4,7 +4,13 @@ import TextAlign from "@tiptap/extension-text-align";
 import Highlight from "@tiptap/extension-highlight"
 import { Spinner } from "../ui/spinner";
 import Menubar from "./menubar";
-export function TipTapEditor() {
+export function TipTapEditor({
+  content,
+  onChange,
+}: {
+  content: string;
+  onChange: (content: string) => void;
+}) {
   // Initialise l'éditeur avec les extensions de base
   const editor = useEditor({
     extensions: [
@@ -14,17 +20,17 @@ export function TipTapEditor() {
       }),
       Highlight,
     ],
-    content: "<h1>Titre 1</h1>",
+    content,
     editorProps: {
       attributes: {
         class: "min-h-[156px] border rounded p-2",
       },
     },
-    // onUpdate: ({ editor }) => {
-    //   // Appelle la fonction onChange à chaque mise à jour
-    //   const html = editor.getHTML();
-    //   onChange?.(html);
-    // },
+    onUpdate: ({ editor }) => {
+      // Appelle la fonction onChange à chaque mise à jour
+      const html = editor.getHTML();
+      onChange(html);
+    },
   });
 
   if (!editor) return <Spinner />;

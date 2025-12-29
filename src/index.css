@@ -187,4 +187,14 @@
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
   }
+
+  /* Fix for autofill background color */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus, 
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0px 1000px oklch(var(--background)) inset !important;
+    -webkit-text-fill-color: oklch(var(--foreground)) !important;
+    caret-color: oklch(var(--foreground)) !important;
+  }
 }
