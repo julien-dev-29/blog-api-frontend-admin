@@ -25,9 +25,9 @@ export default function TagsCreate() {
             value={tag.name}
             onChange={handleNameChange}
           />
-          {errors?.formErrors.fieldErrors.name && (
+          {errors?.fieldErrors.name?.[0] && (
             <p className="text-red-500 text-sm">
-              {errors.formErrors.fieldErrors.name}
+              {errors.fieldErrors.name?.[0]}
             </p>
           )}
         </div>

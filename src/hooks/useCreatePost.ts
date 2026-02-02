@@ -18,7 +18,7 @@ export function useCreatePost() {
     slug: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<z.ZodError | null>(null);
+  const [errors, setErrors] = useState<z.ZodFlattenedError<typeof postSchema._output> | null>(null);
   const navigate = useNavigate();
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +46,7 @@ export function useCreatePost() {
 
     const result = postSchema.safeParse(post);
     if (!result.success) {
-      setErrors(result.error);
+      setErrors(result.error.flatten());
       return;
     }
 

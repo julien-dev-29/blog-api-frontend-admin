@@ -2,8 +2,8 @@
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { TipTapEditor } from "../editor/tiptap-editor";
 import { useCreatePost } from "@/hooks/useCreatePost";
+import PostEditor from "../md-editor/md-editor";
 
 export default function PostsCreate() {
   const {
@@ -12,7 +12,6 @@ export default function PostsCreate() {
     errors,
     handleTitleChange,
     generateSlug,
-    handleContentChange,
     handleSubmit,
     setPost,
   } = useCreatePost();
@@ -29,9 +28,9 @@ export default function PostsCreate() {
             value={post.title}
             onChange={handleTitleChange}
           />
-          {errors?.formErrors.fieldErrors.title && (
+          {errors?.fieldErrors.title?.[0] && (
             <p className="text-red-500 text-sm">
-              {errors.formErrors.fieldErrors.title}
+              {errors.fieldErrors.title?.[0]}
             </p>
           )}
         </div>
@@ -48,23 +47,20 @@ export default function PostsCreate() {
               Generate
             </Button>
           </div>
-          {errors?.formErrors.fieldErrors.slug && (
+          {errors?.fieldErrors.slug?.[0] && (
             <p className="text-red-500 text-sm">
-              {errors.formErrors.fieldErrors.slug}
+              {errors.fieldErrors.slug?.[0]}
             </p>
           )}
         </div>
         <div className="space-y-1">
           <Label>Content</Label>
           <div className="shadow rounded">
-            <TipTapEditor
-              content={post.content}
-              onChange={handleContentChange}
-            />
+            <PostEditor post={post} setPost={setPost} />
           </div>
-          {errors?.formErrors.fieldErrors.content && (
+          {errors?.fieldErrors.content?.[0] && (
             <p className="text-red-500 text-sm">
-              {errors.formErrors.fieldErrors.content}
+              {errors.fieldErrors.content?.[0]}
             </p>
           )}
         </div>

@@ -4,11 +4,11 @@ import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { TipTapEditor } from "../editor/tiptap-editor";
 import { Button } from "../ui/button";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { AlertCircleIcon } from "lucide-react";
 import { Spinner } from "../ui/spinner";
+import PostEditor from "../md-editor/md-editor";
 
 type Post = {
   title: string;
@@ -134,10 +134,7 @@ export default function PostsEdit() {
         <div className="space-y-1">
           <Label>Content</Label>
           <div className="shadow rounded">
-            <TipTapEditor
-              initialContent={post.content}
-              onChange={(content) => setPost({ ...post, content })}
-            />
+            <PostEditor post={post} setPost={setPost} />
           </div>
         </div>
         <Button type="submit" disabled={isLoading}>

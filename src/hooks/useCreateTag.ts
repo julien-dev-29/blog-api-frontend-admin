@@ -14,7 +14,7 @@ export function useCreateTag() {
     name: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<z.ZodError | null>(null);
+  const [errors, setErrors] = useState<z.ZodFlattenedError<typeof tagSchema._output> | null>(null);
   const navigate = useNavigate();
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,7 +28,7 @@ export function useCreateTag() {
 
     const result = tagSchema.safeParse(tag);
     if (!result.success) {
-      setErrors(result.error);
+      setErrors(result.error.flatten());
       return;
     }
 
